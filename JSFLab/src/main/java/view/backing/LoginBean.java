@@ -64,7 +64,6 @@ public class LoginBean {
     public String login() {
         if (username.equals("scott") && password.equals("tiger")) {
             FacesContext context = FacesContext.getCurrentInstance();
-            Locale.setDefault(new Locale("pl", "PL"));
             ResourceBundle myResources = ResourceBundle.getBundle("ApplicationMessages", context.getViewRoot().getLocale());
             String messageContent = myResources.getString("validation.oracle");
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, messageContent, messageContent);
