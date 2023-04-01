@@ -9,7 +9,7 @@ import jakarta.ejb.MessageDriven;
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
 import jakarta.jms.MessageListener;
-import jakarta.jms.ObjectMessage;
+import jakarta.jms.TextMessage;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
@@ -31,11 +31,15 @@ public class NewsMDB implements MessageListener {
 
     @Override
     public void onMessage(Message message) {
-        ObjectMessage msg = null;
+        TextMessage msg = null;
         try {
-            if (message instanceof ObjectMessage) {
-                msg = (ObjectMessage) message;
-                NewsItem e = (NewsItem) msg.getObject();
+            if (message instanceof TextMessage) {
+                msg = (TextMessage) message;
+                // Warning: regex pipe (|) surprise!
+                String[] msgContent = msg.getText().split("\\|");
+                NewsItem e = new NewsItem();
+                e.setHeading(msgContent[0]);
+                e.setBody(msgContent[1]);
                 em.persist(e);
             }
         } catch (JMSException e) {
